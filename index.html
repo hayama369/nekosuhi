@@ -1,0 +1,207 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>ねこ数秘</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap">
+<style>
+/* 一枚の紙のような縦長カード。白い地に墨色、ハルの目の金をひとさじだけ */
+:root{
+  --bg:#faf9f6; --paper:#ffffff; --ink:#3a3a3e; --sub:#7a7872; --line:#e6e3dc; --gold:#c9a24f;
+  --cat-outline:#3a3a3e; --err:#b0605a;
+  --display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d1d20; --paper:#26262a; --ink:#e9e6df; --sub:#a8a49b; --line:#3a3a40; --gold:#d9b463; --cat-outline:#bdb8ae; --err:#e0908a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1d1d20; --paper:#26262a; --ink:#e9e6df; --sub:#a8a49b; --line:#3a3a40; --gold:#d9b463; --cat-outline:#bdb8ae; --err:#e0908a; color-scheme:dark}
+html,body{touch-action:manipulation}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 80px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:64px}
+header{text-align:center;display:flex;flex-direction:column;gap:6px}
+h1{font-family:var(--display);font-weight:700;font-size:2rem;letter-spacing:.12em;margin:0}
+.lead{color:var(--sub);font-size:.9rem;margin:0}
+form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center}
+label{font-size:.85rem;color:var(--sub);letter-spacing:.08em}
+input#bd{font-size:16px;width:9.5em;letter-spacing:.08em;font-variant-numeric:tabular-nums;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+button{font:inherit;touch-action:manipulation;font-weight:500;color:var(--paper);background:var(--ink);border:0;border-radius:6px;padding:9px 20px;cursor:pointer}
+button:focus-visible,input:focus-visible,.pick:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.result{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:44px max(24px,7%);display:flex;flex-direction:column;gap:30px}
+.hero{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.hero svg{width:150px;height:150px}
+.num{font-family:var(--display);color:var(--gold);font-size:.95rem;letter-spacing:.2em}
+.name{font-family:var(--display);font-weight:700;font-size:1.7rem;margin:0;letter-spacing:.08em}
+.calc{font-size:.8rem;color:var(--sub);font-variant-numeric:tabular-nums}
+.text{margin:0;text-wrap:pretty}
+.ph{display:inline-block}
+dd,.when,.word{text-wrap:pretty}
+dl{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin:0}
+dt{color:var(--sub);font-size:.85rem;letter-spacing:.08em;padding-top:2px}
+dd{margin:0;min-width:0}
+.word{border-top:1px solid var(--line);padding-top:18px;text-align:center;font-family:var(--display);font-size:1.05rem}
+.word span{display:block;font-family:var(--body);font-size:.75rem;color:var(--sub);letter-spacing:.15em;margin-bottom:4px}
+h2{font-family:var(--display);font-weight:500;font-size:1.15rem;text-align:center;margin:0 0 22px;letter-spacing:.1em}
+.rel{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rel li{display:grid;grid-template-columns:44px 6.5em 1fr;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rel li:last-child{border-bottom:0}
+.rel svg{width:44px;height:44px}
+.rel .cn{font-family:var(--display);font-weight:500}
+.rel .when{font-size:.88rem;min-width:0}
+.all{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pick{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--ink);font:inherit}
+.pick svg{width:64px;height:64px}
+.pick b{font-family:var(--display);font-weight:500;font-size:.9rem}
+.pick small{color:var(--gold);font-size:.75rem}
+.pick[aria-pressed=true]{border-color:var(--gold)}
+[hidden]{display:none!important}
+.err{text-align:center;color:var(--err);margin:-40px 0 0;font-size:.88rem}
+.wait{text-align:center;color:var(--sub);font-family:var(--display);margin:0}
+.save{display:flex;flex-direction:column;align-items:center;gap:10px}
+.save button{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.save .note{font-size:.8rem;color:var(--sub);margin:0;text-align:center}
+.save img{width:min(260px,70%);border:1px solid var(--line);border-radius:6px}
+footer{text-align:center;color:var(--sub);font-size:.78rem}
+@media (max-width:420px){.rel li{grid-template-columns:40px 5.5em 1fr;gap:8px}.rel svg{width:40px;height:40px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>ねこ数秘</h1>
+    <p class="lead">生年月日を足して、あなたを猫にします</p>
+  </header>
+
+  <form id="f">
+    <label for="bd">生年月日</label>
+    <input type="text" id="bd" inputmode="numeric" autocomplete="bday" placeholder="19900703" maxlength="10" required>
+    <button type="submit">猫になる</button>
+  </form>
+
+  <section class="result" id="result" aria-live="polite" hidden></section>
+
+  <section id="relbox" hidden>
+    <h2>こういう時はこの猫</h2>
+    <ul class="rel" id="rel"></ul>
+  </section>
+
+  <section id="allbox" hidden>
+    <h2>9匹の猫</h2>
+    <div class="all" id="all"></div>
+  </section>
+
+  <p class="err" id="err" hidden></p>
+  <p class="wait" id="wait">生年月日を入れると、猫が出てきます</p>
+
+  <footer>数秘（生年月日を全部足して1桁にする）で9匹に分けた、遊びの占いです。</footer>
+</div>
+
+<script>
+const CATS={
+ 1:{name:'白猫',text:'自分の基準をしっかり持っていて、まわりに流されない。近寄りがたく見られやすいけど、理想が高いだけ。身のまわりも気持ちも、いつも整えておきたい。',good:'自分で決めて、最初の一歩を踏み出すこと',bad:'妥協すること、散らかった場所',word:'完璧じゃなくても、たまには隙を見せてみる'},
+ 2:{name:'サバトラ',text:'好きか嫌いか、はっきりしている。最初は様子を見て距離をとるけど、一度心を開いた相手にはとことんフレンドリー。',good:'信頼できる相手を見極めること',bad:'どっちつかずの状態',word:'白黒つけない時間があってもいい'},
+ 3:{name:'キジトラ',text:'誰とでもすぐ仲良くなれる人なつっこさ。自分の魅力をちゃんとわかっていて、気になったらすぐ動ける。',good:'新しい場所や人に飛び込むこと',bad:'じっと待つこと',word:'たまには一か所にとどまって、深めてみる'},
+ 4:{name:'ハチワレ',text:'まわりが騒いでも動じない落ち着き。自分のペースを崩さず、決めたことをこつこつ続けられる。',good:'計画を立てて、最後までやり切ること',bad:'急な予定変更',word:'予定外のことも、たまには楽しんでみる'},
+ 5:{name:'シャム',text:'思ったことをすぐ言葉にするおしゃべりさん。自由に動き回りたいのに、ひとりになるとさみしくなる。',good:'場を盛り上げること、気持ちを言葉にすること',bad:'ひとりで過ごす時間',word:'さみしい時は、さみしいと言っていい'},
+ 6:{name:'グレー',text:'うれしいも悲しいも全身に出る、まっすぐな性格。人見知りだけど、好きになった相手にはとことん尽くす。',good:'愛情を伝えること',bad:'初対面、気持ちを隠すこと',word:'尽くしすぎた日は、自分にも優しくする'},
+ 7:{name:'サビ',text:'よく観察して考えて、物事の奥まで見抜く賢さ。心を許すまでは時間がかかるけど、慣れた相手にはびっくりするほど甘える。',good:'深く考えること、本質を見抜くこと',bad:'浅い付き合い、急かされること',word:'考えすぎたら、まず誰かに甘えてみる'},
+ 8:{name:'三毛',text:'いつも呑気に見えて、実はちゃんとかしこい。焦らず自分のペースで、ほしいものを手にしていく。',good:'無理せず結果を出すこと',bad:'人に合わせて急ぐこと',word:'満たされている時ほど、まわりに分けてみる'},
+ 9:{name:'黒猫',text:'頭の回転が速くて、人のことをよく見ている。素っ気なく見えて、心を許した相手にはとことん甘える。そのギャップでまわりを振り回しがち。',good:'空気を読むこと、人の本音に気づくこと',bad:'素直に「好き」と言うこと',word:'甘えたい時は、たまには自分から言ってみる'}
+};
+const WHEN=['','何かを始める時、背中を押してくれる','迷った時、どっちか決めてくれる','遊びに行くなら','計画を立てる時に頼れる','気分転換したい時','癒されたい時','じっくり相談したい時','一緒にいると満たされる、長く続く相手'];
+
+/* 猫の絵：ハルと同じ座り姿。柄だけ変える */
+const SHAPE=`<path d="M23 96 C21 70 29 50 45 50 C61 50 70 70 70 96 Z"/><ellipse cx="44" cy="35" rx="21" ry="19"/>
+<path d="M25 30 L26.5 9 L40 19 Z"/><path d="M63 30 L61.5 9 L48 19 Z"/>
+<path d="M64 96 C82 98 90 90 89 74 C89 68 87 64 84.5 61 C82.5 59 79.5 61 80.5 64 C82 68 83 71 83 74 C83.5 86 78 90.5 64 90.5 Z"/>`;
+const PAT={
+ 1:{base:'#f6f4ef',eyes:['#6fa3c9','#d6b25c'],draw:''},
+ 2:{base:'#a3a4a6',eyes:['#c9b45a','#c9b45a'],draw:stripes('#5d5f63')},
+ 3:{base:'#9b7b57',eyes:['#c9b45a','#c9b45a'],draw:stripes('#4f3d2b')},
+ 4:{base:'#2f2f33',eyes:['#d6b25c','#d6b25c'],draw:'<path d="M44 22 L30 54 L58 54 Z" fill="#f6f4ef"/><ellipse cx="44" cy="47" rx="15" ry="7" fill="#f6f4ef"/><path d="M36 52 L54 52 L58 96 L32 96 Z" fill="#f6f4ef"/>'},
+ 5:{base:'#efe4cf',eyes:['#6fa3c9','#6fa3c9'],draw:'<ellipse cx="44" cy="39" rx="13" ry="12" fill="#5a4535"/><path d="M25 30 L26.5 9 L40 19 Z M63 30 L61.5 9 L48 19 Z" fill="#5a4535"/><path d="M72 58 L100 58 L100 100 L72 100 Z" fill="#5a4535"/>'},
+ 6:{base:'#7f8b99',eyes:['#9cc27a','#9cc27a'],draw:''},
+ 7:{base:'#2f2f33',eyes:['#d6b25c','#d6b25c'],draw:'<g fill="#b0673c"><ellipse cx="32" cy="24" rx="6" ry="4"/><ellipse cx="57" cy="44" rx="5" ry="3"/><ellipse cx="38" cy="64" rx="7" ry="4"/><ellipse cx="56" cy="78" rx="8" ry="5"/><ellipse cx="32" cy="88" rx="5" ry="5"/><ellipse cx="86" cy="74" rx="4" ry="6"/><ellipse cx="66" cy="92" rx="6" ry="3"/></g>'},
+ 8:{base:'#f6f4ef',eyes:['#c9b45a','#c9b45a'],draw:'<path d="M20 8 L44 10 L42 40 L20 36 Z" fill="#d08a45"/><path d="M48 6 L70 6 L68 30 L50 28 Z" fill="#2f2f33"/><ellipse cx="57" cy="76" rx="12" ry="10" fill="#d08a45"/><ellipse cx="32" cy="88" rx="8" ry="7" fill="#2f2f33"/><path d="M80 56 L96 56 L96 80 L80 80 Z" fill="#d08a45"/>'},
+ 9:{base:'#2f2f33',eyes:['#d6b25c','#d6b25c'],draw:''}
+};
+function stripes(c){let s=`<g fill="${c}"><path d="M38 16 L40 26 L42 16 Z"/><path d="M46 16 L48 26 L50 16 Z"/>`;
+  for(let y=62;y<96;y+=9)s+=`<path d="M20 ${y} Q45 ${y+3} 72 ${y-1} L72 ${y+3} Q45 ${y+6} 20 ${y+4} Z"/>`;
+  s+=`<path d="M82 64 L92 66 L92 69 L82 68 Z"/><path d="M80 77 L92 77 L92 80 L80 80 Z"/><path d="M72 87 L82 90 L80 93 L70 90 Z"/></g>`;return s}
+let uid=0,current=null;
+/* 「、」「。」のところで区切る（途中で行が割れにくくする） */
+function chunks(t){return t.match(/[^、。]+[、。]?/g)||[t]}
+function phr(t){return chunks(t).map(p=>`<span class="ph">${p}</span>`).join('')}
+function cat(n){const p=PAT[n],id='c'+(uid++);
+  return `<svg viewBox="-2 -2 104 104" role="img" aria-label="${CATS[n].name}">
+  <defs><clipPath id="${id}">${SHAPE}</clipPath></defs>
+  <g fill="none" stroke="var(--cat-outline)" stroke-width="3" stroke-linejoin="round">${SHAPE}</g>
+  <g clip-path="url(#${id})"><rect x="0" y="0" width="100" height="96" fill="${p.base}"/>${p.draw}</g>
+  <circle cx="36" cy="36" r="3.4" fill="${p.eyes[0]}"/><circle cx="52" cy="36" r="3.4" fill="${p.eyes[1]}"/></svg>`}
+
+function numOf(str){const d=str.replace(/\D/g,'').split('').map(Number);let s=d.reduce((a,b)=>a+b,0);const steps=[d.join('+')+' = '+s];
+  while(s>9){const t=String(s).split('').map(Number);s=t.reduce((a,b)=>a+b,0);steps.push(t.join('+')+' = '+s)}return{n:s,steps}}
+
+function show(n,steps){const c=CATS[n];
+  ['result','relbox','allbox'].forEach(i=>document.getElementById(i).hidden=false);document.getElementById('wait').hidden=true;
+  document.getElementById('result').innerHTML=`<div class="hero">${cat(n)}<div class="num">${n}</div><p class="name">${c.name}</p>
+   ${steps?`<div class="calc">${steps.map(t=>`<span class="ph">${t}</span>`).join('<span class="ph">　→　</span>')}</div>`:''}</div>
+   <p class="text">${phr(c.text)}</p>
+   <dl><dt>得意</dt><dd>${phr(c.good)}</dd><dt>苦手</dt><dd>${phr(c.bad)}</dd></dl>
+   <p class="word"><span>ひとこと</span>${phr(c.word)}</p>
+   <div class="save"><button type="button" id="saveBtn">画像で保存</button><p class="note" id="saveNote" hidden></p><img id="savePrev" alt="保存用の画像" hidden></div>`;
+  current=n;
+  const rows=[];for(let m=1;m<=9;m++)if(m!==n)rows.push({m,d:Math.abs(n-m)});rows.sort((a,b)=>a.d-b.d||a.m-b.m);
+  document.getElementById('rel').innerHTML=rows.map(r=>`<li>${cat(r.m)}<span class="cn">${CATS[r.m].name}</span><span class="when">${WHEN[r.d]}</span></li>`).join('');
+  document.querySelectorAll('.pick').forEach(b=>b.setAttribute('aria-pressed',b.dataset.n==n))}
+
+document.getElementById('all').innerHTML=Object.keys(CATS).map(n=>`<button type="button" class="pick" data-n="${n}" aria-pressed="false">${cat(n)}<b>${CATS[n].name}</b><small>${n}</small></button>`).join('');
+document.getElementById('all').addEventListener('click',e=>{const b=e.target.closest('.pick');if(b){show(+b.dataset.n,null);document.getElementById('result').scrollIntoView({behavior:'smooth'})}});
+document.getElementById('f').addEventListener('submit',e=>{e.preventDefault();
+  const v=document.getElementById('bd').value.replace(/\D/g,''),err=document.getElementById('err');
+  const y=+v.slice(0,4),m=+v.slice(4,6),d=+v.slice(6,8),dt=new Date(y,m-1,d);
+  if(v.length!==8||dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d){err.textContent='8けたの数字で入れてください（例：19900703）';err.hidden=false;return}
+  err.hidden=true;const r=numOf(v);show(r.n,r.steps)});
+
+/* 結果を 1080×1920 の画像にする（インスタのストーリーにそのまま貼れる縦長） */
+function catImg(n){const svg=cat(n).replace(/var\(--cat-outline\)/g,'#3a3a3e').replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" ');
+  return new Promise((ok,ng)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=ng;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)})}
+function wrapText(ctx,t,max){const out=[];let line='';
+  const fits=u=>ctx.measureText(u).width<=max;
+  for(const ch of chunks(t)){
+    if(fits(line+ch)){line+=ch;continue}
+    if(line){out.push(line);line=''}
+    if(fits(ch)){line=ch;continue}
+    for(const c of ch){if(!fits(line+c)&&line){if('、。」'.includes(c)){line+=c;continue}out.push(line);line=c}else line+=c}
+  }
+  if(line)out.push(line);
+  if(out.length>1&&out[out.length-1].length<=3){const p=out[out.length-2],k=Math.ceil((p.length+out[out.length-1].length)/2);out[out.length-1]=p.slice(k)+out[out.length-1];out[out.length-2]=p.slice(0,k)}
+  return out}
+async function makeImage(n){const c=CATS[n],W=1080,H=1920,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  const D='"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif',B='"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif';
+  try{await Promise.all([document.fonts.load('700 70px "Zen Old Mincho"'),document.fonts.load('500 40px "Zen Kaku Gothic New"')])}catch(e){}
+  x.fillStyle='#ffffff';x.fillRect(0,0,W,H);x.textAlign='center';x.textBaseline='top';
+  let y=200;
+  x.fillStyle='#9a978f';x.font='500 34px '+B;x.fillText('ねこ数秘',W/2,y);y+=110;
+  const im=await catImg(n);x.drawImage(im,W/2-200,y,400,400);y+=440;
+  x.fillStyle='#c9a24f';x.font='500 44px '+D;x.fillText(String(n),W/2,y);y+=70;
+  x.fillStyle='#3a3a3e';x.font='700 80px '+D;x.fillText(c.name,W/2,y);y+=150;
+  x.fillStyle='#55555a';x.font='400 38px '+B;for(const l of wrapText(x,c.text,800)){x.fillText(l,W/2,y);y+=64}y+=40;
+  x.font='400 34px '+B;x.fillStyle='#8a877f';x.fillText('得意',W/2,y);y+=50;x.fillStyle='#55555a';for(const l of wrapText(x,c.good,800)){x.fillText(l,W/2,y);y+=56}y+=24;
+  x.fillStyle='#8a877f';x.fillText('苦手',W/2,y);y+=50;x.fillStyle='#55555a';for(const l of wrapText(x,c.bad,800)){x.fillText(l,W/2,y);y+=56}y+=50;
+  x.strokeStyle='#e6e3dc';x.lineWidth=2;x.beginPath();x.moveTo(W/2-200,y);x.lineTo(W/2+200,y);x.stroke();y+=50;
+  x.fillStyle='#3a3a3e';x.font='500 42px '+D;for(const l of wrapText(x,c.word,820)){x.fillText(l,W/2,y);y+=64}
+  return new Promise(ok=>cv.toBlob(ok,'image/png'))}
+let dl;(async()=>{try{dl=await window.claude?.use?.('downloads')}catch(e){dl=null}})();
+document.getElementById('result').addEventListener('click',async e=>{if(e.target.id!=='saveBtn'||current==null)return;
+  const note=document.getElementById('saveNote'),prev=document.getElementById('savePrev'),btn=e.target;
+  btn.disabled=true;note.hidden=false;note.textContent='画像を作っています';
+  try{const blob=await makeImage(current);
+    if(dl){try{await dl.save({filename:'neko-'+CATS[current].name+'.png',data:blob});note.textContent='保存しました';btn.disabled=false;return}
+      catch(err){if(err&&err.code==='declined'){note.hidden=true;btn.disabled=false;return}}}
+    prev.src=URL.createObjectURL(blob);prev.hidden=false;note.textContent='画像を長押しすると保存できます';
+  }catch(err){note.textContent='画像を作れませんでした。もう一度押してください'}
+  btn.disabled=false});
+</script>
+
+</body></html>
