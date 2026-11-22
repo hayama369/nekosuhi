@@ -108,7 +108,7 @@ const CATS={
  8:{name:'三毛',text:'いつも呑気に見えて、実はちゃんとかしこい。焦らず自分のペースで、ほしいものを手にしていく。',good:'無理せず結果を出すこと',bad:'人に合わせて急ぐこと',word:'満たされている時ほど、まわりに分けてみる'},
  9:{name:'黒猫',text:'頭の回転が速くて、人のことをよく見ている。素っ気なく見えて、心を許した相手にはとことん甘える。そのギャップでまわりを振り回しがち。',good:'空気を読むこと、人の本音に気づくこと',bad:'素直に「好き」と言うこと',word:'甘えたい時は、たまには自分から言ってみる'}
 };
-const WHEN=['','何かを始める時、背中を押してくれる','迷った時、どっちか決めてくれる','遊びに行くなら','計画を立てる時に頼れる','気分転換したい時','癒されたい時','じっくり相談したい時','一緒にいると満たされる、長く続く相手'];
+const WHEN=['自分を見つめ直したい時','何かを始める時、背中を押してくれる','迷った時、どっちか決めてくれる','遊びに行くなら','計画を立てる時に頼れる','気分転換したい時','癒されたい時','じっくり相談したい時','一緒にいると満たされる、長く続く相手'];
 
 /* 猫の絵：ハルと同じ座り姿。柄だけ変える */
 const SHAPE=`<path d="M23 96 C21 70 29 50 45 50 C61 50 70 70 70 96 Z"/><ellipse cx="44" cy="35" rx="21" ry="19"/>
@@ -151,7 +151,7 @@ function show(n,steps){const c=CATS[n];
    <p class="word"><span>ひとこと</span>${phr(c.word)}</p>
    <div class="save"><button type="button" id="saveBtn">画像で保存</button><p class="note" id="saveNote" hidden></p><img id="savePrev" alt="保存用の画像" hidden></div>`;
   current=n;
-  const rows=[];for(let m=1;m<=9;m++)if(m!==n)rows.push({m,d:Math.abs(n-m)});rows.sort((a,b)=>a.d-b.d||a.m-b.m);
+  const rows=[];for(let m=1;m<=9;m++)rows.push({m,d:Math.abs(n-m)});rows.sort((a,b)=>a.d-b.d||a.m-b.m);
   document.getElementById('rel').innerHTML=rows.map(r=>`<li>${cat(r.m)}<span class="cn">${CATS[r.m].name}</span><span class="when">${WHEN[r.d]}</span></li>`).join('');
   document.querySelectorAll('.pick').forEach(b=>b.setAttribute('aria-pressed',b.dataset.n==n))}
 
